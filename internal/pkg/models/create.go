@@ -23,9 +23,13 @@ func Insert(user *User) (id int64, err error) {
 		return
 	}
 
-	sql := `INSERT INTO users (email, password, created_at, updated_at) VALUES ($1, $2, $3, $4) RETURNING id`
+	sql := `INSERT INTO users (email, password, name, age, nationality, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`
 
-	err = conn.QueryRow(sql, user.Email, user.Password, now, now).Scan(&id)
+	err = conn.QueryRow(sql, user.Email, user.Password, user.Name, user.Age, user.Nationality, now, now).Scan(&id)
+	if err != nil {
+		return
+	}
+
 	return
 }
 

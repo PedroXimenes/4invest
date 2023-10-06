@@ -6,11 +6,14 @@ import (
 )
 
 type User struct {
-	ID        int64
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-	CreatedAt string
-	UpdatedAt string
+	ID          int64
+	Email       string `json:"email"`
+	Password    string `json:"password"`
+	Name        string `json:"name"`
+	Nationality string `json:"nationality"`
+	Age         int64  `json:"age"`
+	CreatedAt   string
+	UpdatedAt   string
 }
 
 func AddTimestamp() (string, error) {
@@ -30,6 +33,12 @@ func (u *User) ValidateInput() (key string, err error) {
 	} else if u.Password == "" {
 		err = fmt.Errorf("Missing key: password")
 		key = "password"
+	} else if u.Name == "" {
+		err = fmt.Errorf("Missing key: name")
+		key = "name"
+	} else if u.Nationality == "" {
+		err = fmt.Errorf("Missing key: nationality")
+		key = "nationality"
 	}
 	return
 }
