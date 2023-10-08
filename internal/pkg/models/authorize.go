@@ -4,12 +4,13 @@ import (
 	"fmt"
 
 	"github.com/PedroXimenes/4invest/internal/pkg/db"
+	log "github.com/sirupsen/logrus"
 )
 
 func Authorize(user *User) error {
 	conn, err := db.OpenConnection()
 	if err != nil {
-		fmt.Printf("DB Connection error: %s\n", err)
+		log.Errorf("DB Connection error: %s\n", err)
 		return err
 	}
 	defer conn.Close()
@@ -23,7 +24,7 @@ func Authorize(user *User) error {
 	p := &pass{}
 	err = row.Scan(&p.password)
 	if err != nil {
-		fmt.Printf("%s\n", err)
+		log.Error(err)
 		return err
 	}
 

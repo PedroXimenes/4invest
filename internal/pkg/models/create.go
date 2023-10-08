@@ -5,12 +5,13 @@ import (
 	"fmt"
 
 	"github.com/PedroXimenes/4invest/internal/pkg/db"
+	log "github.com/sirupsen/logrus"
 )
 
 func Insert(user *User) (id int64, err error) {
 	conn, err := db.OpenConnection()
 	if err != nil {
-		fmt.Printf("DB Connection error: %s\n", err)
+		log.Errorf("DB Connection error: %s\n", err)
 		return
 	}
 	defer conn.Close()
@@ -19,7 +20,7 @@ func Insert(user *User) (id int64, err error) {
 
 	now, err := AddTimestamp()
 	if err != nil {
-		fmt.Printf("Timestamp error: %s\n", err)
+		log.Errorf("Timestamp error: %s\n", err)
 		return
 	}
 

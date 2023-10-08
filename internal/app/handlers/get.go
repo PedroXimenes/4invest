@@ -7,6 +7,7 @@ import (
 
 	"github.com/PedroXimenes/4invest/internal/pkg/models"
 	"github.com/gofiber/fiber/v2"
+	log "github.com/sirupsen/logrus"
 )
 
 func Get(c *fiber.Ctx) error {
@@ -22,7 +23,7 @@ func Get(c *fiber.Ctx) error {
 
 	user, err := models.Get(id)
 	if err != nil {
-		fmt.Printf("%s\n", err)
+		log.Error(err)
 		if err.Error() == "sql: no rows in result set" {
 			errMsg := fmt.Sprintf("No results for user: %d", id)
 			return c.Status(http.StatusNotFound).SendString(errMsg)

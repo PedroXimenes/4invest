@@ -7,6 +7,7 @@ import (
 
 	"github.com/PedroXimenes/4invest/internal/pkg/models"
 	"github.com/gofiber/fiber/v2"
+	log "github.com/sirupsen/logrus"
 )
 
 func Delete(c *fiber.Ctx) error {
@@ -21,7 +22,7 @@ func Delete(c *fiber.Ctx) error {
 	}
 	rowsAffected, err := models.Delete(id)
 	if err != nil {
-		fmt.Printf("%s\n", err)
+		log.Error(err)
 		return c.Status(http.StatusInternalServerError).SendString("Internal Server Error")
 	}
 	if rowsAffected == 0 {

@@ -6,17 +6,19 @@ import (
 
 	"github.com/PedroXimenes/4invest/internal/pkg/models"
 	"github.com/gofiber/fiber/v2"
+	log "github.com/sirupsen/logrus"
 )
 
 func Authorize(c *fiber.Ctx) error {
 	user := &models.User{}
 	err := c.BodyParser(user)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		log.Error(err)
 		return c.Status(http.StatusUnprocessableEntity).SendString("Could not decode request body")
 	}
 	key, err := user.ValidateInput()
 	if err != nil {
+		log.WithField("key", key).Error("Missing key")
 		errMsg := fmt.Sprintf("Missing key: %s", key)
 		return c.Status(http.StatusBadRequest).SendString(errMsg)
 	}
