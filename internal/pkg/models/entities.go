@@ -42,3 +42,14 @@ func (u *User) ValidateInput() (key string, err error) {
 	}
 	return
 }
+
+func (u *User) ValidateAuthReq() (key string, err error) {
+	if u.Email == "" {
+		err = fmt.Errorf("Missing key: email")
+		key = "email"
+	} else if u.Password == "" {
+		err = fmt.Errorf("Missing key: password")
+		key = "password"
+	}
+	return
+}

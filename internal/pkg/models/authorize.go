@@ -29,7 +29,7 @@ func Authorize(user *User) error {
 	}
 
 	if p.password != user.Password {
-		err := fmt.Errorf("Incorrect password")
+		err := fmt.Errorf("Incorrect email or password")
 		return err
 	}
 

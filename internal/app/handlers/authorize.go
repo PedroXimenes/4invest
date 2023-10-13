@@ -16,7 +16,7 @@ func Authorize(c *fiber.Ctx) error {
 		log.Error(err)
 		return c.Status(http.StatusUnprocessableEntity).SendString("Could not decode request body")
 	}
-	key, err := user.ValidateInput()
+	key, err := user.ValidateAuthReq()
 	if err != nil {
 		log.WithField("key", key).Error("Missing key")
 		errMsg := fmt.Sprintf("Missing key: %s", key)
@@ -24,11 +24,14 @@ func Authorize(c *fiber.Ctx) error {
 	}
 
 	if err := models.Authorize(user); err != nil {
-		if err.Error() == "Incorrect password" {
+		if err.Error() == "Incorrect email or password" {
+			log.Error(err)
 			return c.Status(http.StatusUnauthorized).SendString(err.Error())
 		} else if err.Error() == "sql: no rows in result set" {
-			return c.Status(http.StatusNotFound).SendString("Email not found")
+			log.Error(err)
+			return c.Status(http.StatusUnauthorized).SendString("Incorrect email or password")
 		} else {
+			log.Error(err)
 			return c.Status(http.StatusInternalServerError).SendString("Internal Server Error")
 		}
 	}
