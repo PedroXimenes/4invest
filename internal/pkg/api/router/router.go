@@ -7,7 +7,10 @@ import (
 )
 
 func Router(app *fiber.App) {
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:3000, https://four-invest-front-p3xh7jp6wa-uc.a.run.app",
+		AllowHeaders: "Origin, Content-Type, Accept",
+	}))
 
 	app.Get("/users", handlers.GetAll)
 	app.Get("/users/:id", handlers.Get)
