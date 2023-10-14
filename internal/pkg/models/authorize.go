@@ -7,31 +7,32 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func Authorize(user *User) error {
+func Authorize(user *User) (int64, error) {
 	conn, err := db.OpenConnection()
 	if err != nil {
 		log.Errorf("DB Connection error: %s\n", err)
-		return err
+		return 0, err
 	}
 	defer conn.Close()
 
 	user.hashPassword()
 
-	row := conn.QueryRow(`SELECT password FROM users WHERE email=$1`, user.Email)
+	row := conn.QueryRow(`SELECT id, password  FROM users WHERE email=$1`, user.Email)
 	type pass struct {
 		password string
 	}
 	p := &pass{}
-	err = row.Scan(&p.password)
+	var id int64
+	err = row.Scan(&id, &p.password)
 	if err != nil {
 		log.Error(err)
-		return err
+		return 0, err
 	}
 
 	if p.password != user.Password {
 		err := fmt.Errorf("Incorrect email or password")
-		return err
+		return 0, err
 	}
 
-	return nil
+	return id, nil
 }

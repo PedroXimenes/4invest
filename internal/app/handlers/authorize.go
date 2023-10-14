@@ -23,7 +23,8 @@ func Authorize(c *fiber.Ctx) error {
 		return c.Status(http.StatusBadRequest).SendString(errMsg)
 	}
 
-	if err := models.Authorize(user); err != nil {
+	id, err := models.Authorize(user)
+	if err != nil {
 		if err.Error() == "Incorrect email or password" {
 			log.Error(err)
 			return c.Status(http.StatusUnauthorized).SendString(err.Error())
@@ -35,5 +36,8 @@ func Authorize(c *fiber.Ctx) error {
 			return c.Status(http.StatusInternalServerError).SendString("Internal Server Error")
 		}
 	}
-	return c.Status(http.StatusOK).SendString("ok")
+	msg := map[string]int64{
+		"id": id,
+	}
+	return c.Status(http.StatusOK).JSON(msg)
 }
